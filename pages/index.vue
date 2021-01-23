@@ -28,7 +28,17 @@
 </template>
 
 <script>
-export default {}
+import Logo from '~/components/Logo.vue'
+
+export default {
+  components: {
+    Logo
+  },
+  mounted() {
+    console.log('Current Block Number')
+    this.$web3.eth.getBlockNumber().then(console.log)
+  }
+}
 </script>
 
 <style>

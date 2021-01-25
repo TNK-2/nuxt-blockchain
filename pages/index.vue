@@ -6,22 +6,26 @@
         nuxt-web3
       </h1>
       <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
+        <input
+          type="text"
+          v-model="inputNumber"
+          placeholder="input number"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
+        <button
+          @click="setNumber()"
         >
-          GitHub
-        </a>
+          Set Number to contract
+        </button>
+      </div>
+      <div class="links">
+        <button
+          @click="getNumber()"
+        >
+          Get Number from contract
+        </button>
+      </div>
+      <div>
+        Number:{{number}}
       </div>
     </div>
   </div>
@@ -31,6 +35,23 @@
 import Logo from '~/components/Logo.vue'
 
 export default {
+  data() {
+    return {
+      number: 0, // コントラクトから取得する数値
+      inputNumber: 0 // フォームから入力された数値
+    }
+  },
+  methods: {
+    getNumber: async function() {
+      let ret = await this.$contract.methods.get().call() // コントラクトからの読み込み部分
+      this.number = ret // フロントへ反映
+    },
+    setNumber: async function() {
+      let accounts = await this.$web3.eth.getAccounts() // MetaMask で使っているアカウントの取得
+      let account = accounts[0]
+      let ret = await this.$contract.methods.set(this.inputNumber).send({from: account}) // コントラクトへの書き込み部分
+    }
+  },
   components: {
     Logo
   },
